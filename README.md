@@ -14,6 +14,7 @@ The repository is structed as follows:
 # packages
 
 1-  pip install pdpm pot gudhi
+
 2-  python -m pip install -U giotto-tda
 
 
