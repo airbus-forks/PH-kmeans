@@ -3,7 +3,7 @@ import sys
 import random
 from gudhi.wasserstein import wasserstein_distance
 from gudhi.wasserstein.barycenter import lagrangian_barycenter
-from data_utils.pd_pm_methods import *
+from PHkmeans.src.data_utils.pd_pm_methods import *
 
 
 def kmeans_plusplus(data: list, n_clusters: int, data_type: str, random_state: int, **kwargs):
