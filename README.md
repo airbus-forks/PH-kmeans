@@ -10,3 +10,13 @@ The repository is structed as follows:
   *  `data_utils` contains scripts generating the simulated data and processing the real-world data used in the project. This directory also contains methods used to clean and process persistent homology representations. 
   * `pd_pm_kmeans.py` contains the persistence diagram and persistence measure $k$-means algorithms. 
   * `synthetic_data_clustering.ipynb` demonstrates how the code was used to generate results on simulated data. 
+
+# packages
+
+1-  pip install pdpm pot gudhi
+2-  python -m pip install -U giotto-tda
+
+
+# note
+
+  * at first you must change project file name from PH-kmeans  to PHkmeans(without dash) 
