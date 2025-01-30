@@ -1,9 +1,11 @@
 # packages
 import sys
 import random
+import numpy as np
 from gudhi.wasserstein import wasserstein_distance
 from gudhi.wasserstein.barycenter import lagrangian_barycenter
-from PHkmeans.src.data_utils.pd_pm_methods import *
+from src.data_utils.pd_pm_methods import *
+from PD_subsample.ApproxPH import *
 
 
 def kmeans_plusplus(data: list, n_clusters: int, data_type: str, random_state: int, **kwargs):
@@ -104,10 +106,12 @@ class PD_KMeans:
         if self.init == 'random':
             self.centroids = random.sample(diagrams, self.n_clusters)
         if self.init == 'kmeans++':
-            self.centroids = kmeans_plusplus(diagrams,
-                                             n_clusters=self.n_clusters,
-                                             data_type='diagram',
-                                             random_state=self.random_state)
+            self.centroids = kmeans_plusplus(
+                diagrams,
+                n_clusters=self.n_clusters,
+                data_type='diagram',
+                random_state=self.random_state
+            )
 
         while not_equal(prev_centroids, self.centroids, n_clusters=self.n_clusters, centroid_type='diagram') \
                 and iteration < self.max_iters:
@@ -151,17 +155,20 @@ class PM_KMeans:
         if self.init == 'random':
             self.centroids = random.sample(measures, self.n_clusters)
         if self.init == 'kmeans++':
-            self.centroids = kmeans_plusplus(measures,
-                                             n_clusters=self.n_clusters,
-                                             data_type='measure',
-                                             random_state=self.random_state,
-                                             dist_mat = self.mp)
+            self.centroids = kmeans_plusplus(
+                measures,
+                n_clusters=self.n_clusters,
+                data_type='measure',
+                random_state=self.random_state,
+                dist_mat = self.mp
+            )
 
         # initialisation step
         self.centroids = random.sample(measures, self.n_clusters)
 
-        while not_equal(prev_centroids, self.centroids, n_clusters=self.n_clusters, centroid_type='measure')  \
-                and iteration < self.max_iters:
+        while not_equal(prev_centroids, self.centroids, n_clusters=self.n_clusters, centroid_type='measure') and iteration < self.max_iters:
+
+            # reset
             clusters = [[] for _ in range(self.n_clusters)]
             labels = []
 
@@ -173,6 +180,7 @@ class PM_KMeans:
                 labels.append(assigned_centroid)
             if len(set(labels)) != 3:
                 break
+
             # update step
             prev_centroids = self.centroids
             self.centroids = [get_mean_mesr(cluster, float_error=1e-8) for cluster in clusters]

@@ -1,0 +1,19 @@
+[project]
+name = "ph-kmeans"
+version = "0.1.0"
+description = "Perform K-means clustering on persistent homology (PH)"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "giotto-tda>=0.6.2",
+    "gudhi>=3.10.1",
+    "matplotlib>=3.10.0",
+    "polars>=1.21.0",
+    "pot>=0.9.5",
+    "tqdm>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]

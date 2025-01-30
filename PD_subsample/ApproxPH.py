@@ -15,7 +15,7 @@ mat_size = int(nb_units*(nb_units+1)/2)+1
 
 def sample_torus(n, r1, r2):
 	"""
-	sample n points from a torus 
+	sample n points from a torus
 	with major radius r1 and minor radius r2
 	"""
 	theta1 = 2 * np.pi * np.random.rand(n)
@@ -28,7 +28,7 @@ def sample_torus(n, r1, r2):
 
 def sample_annulus(n, r1, r2):
 	"""
-	sample n points from an anulus 
+	sample n points from an anulus
 	with major radius r1 and minor radius r2
 	"""
 	theta = 2 * np.pi * np.random.rand(n)
@@ -55,8 +55,8 @@ def rescale_points(points):
 def get_subsample(large_set, nb_sub_size, nb_sub):
 	"""
 	sample multiple subsets from original point set
-	each subset contains nb_sub_size points 
-	""" 
+	each subset contains nb_sub_size points
+	"""
 	row_total = large_set.shape[0]
 	subsample_set = []
 	for i in range(nb_sub):
@@ -66,17 +66,15 @@ def get_subsample(large_set, nb_sub_size, nb_sub):
 
 def get_PD(points, max_edge_length, min_persistence, sparse=0.3):
 	"""
-	compute the persistence diagram for VR filtration of point clouds
+	compute the Ribs Complex persistence diagram for VR filtration of point clouds
 	"""
-	rips = gd.RipsComplex(points=points,\
-						 max_edge_length=max_edge_length,\
-						 sparse=sparse)
+	rips = gd.RipsComplex(points=points,max_edge_length=max_edge_length,sparse=sparse)
 	rips_st = rips.create_simplex_tree(max_dimension=2)
 	pers = rips_st.persistence(min_persistence=min_persistence)
 	diag = rips_st.persistence_intervals_in_dimension(1)
 	return diag
 
-def mesh_gen():
+def mesh_gen(nb_units: int):
 	"""
 	generate mesh on the triangular area
 	"""
@@ -95,11 +93,10 @@ def dist_mat(grid, power_index):
 	M = np.zeros([mat_size, mat_size])
 	for i in range(mat_size-1):
 		for j in range(mat_size-1):
-			M[i,j] = max([abs(grid[i][0]-grid[j][0]),\
-						abs(grid[i][1]-grid[j][1])])
-	# append the diagnal
+			M[i,j] = max([abs(grid[i][0]-grid[j][0]), abs(grid[i][1]-grid[j][1])])
+	# append the diagonal
 	for k in range(mat_size-1):
-		M[k,mat_size-1] = (grid[k][1]-grid[k][0])/2 
+		M[k,mat_size-1] = (grid[k][1]-grid[k][0])/2
 		M[mat_size-1,k] = (grid[k][1]-grid[k][0])/2
 	Mp = np.power(M,power_index)
 	return Mp
@@ -107,8 +104,8 @@ def dist_mat(grid, power_index):
 def diag_to_mesr(diag, unit_mass):
 	"""
 	transform persistence diagrams into persistence measures
-	unit_mass specifies the weight of each point in a  
-	persistence diagram 
+	unit_mass specifies the weight of each point in a
+	persistence diagram
 	"""
 	mesr = np.zeros(mat_size) + float_error
 	mesr_vis = np.zeros([nb_units,nb_units])
@@ -123,7 +120,7 @@ def wass_dist(a, b, Mp):
 	"""
 	compute the p-Wasserstein distance betweent two measures.
 	note: take pth root to get a real distance
-	""" 
+	"""
 	a_mesr = a.tolist()
 	b_mesr = b.tolist()
 	a_ms_all = sum(a_mesr)
@@ -149,7 +146,7 @@ def plot_diag(diag):
 	ax = fig.add_subplot(111)
 	ax.scatter(diag[:,0], diag[:,1], s=75, marker='o', c='red', alpha=0.8)
 	ax.plot([0,1], [0,1], linewidth=0.5)
-	plt.fill_between([0,1], [0,1], [0,0], facecolor='green', alpha=0.2)	
+	plt.fill_between([0,1], [0,1], [0,0], facecolor='green', alpha=0.2)
 	ax.set_xlim((0,1))
 	ax.set_ylim((0,1))
 	ax.set_xlabel("Births")
@@ -174,7 +171,7 @@ def plot_mesr(mesr_vis):
 	plt.yticks(loc, loc/nb_units)
 	ax.set_xlabel("Births")
 	ax.set_ylabel("Deaths")
-	plt.fill_between([0,L], [0,L], [0,0], facecolor='green', alpha=0.2)	
+	plt.fill_between([0,L], [0,L], [0,0], facecolor='green', alpha=0.2)
 	ax.set_title("Mean Persistence Diagram")
 	plt.show()
 
